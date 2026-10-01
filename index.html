@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SagarDrishti &middot; Argo Float Ocean Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+    --abyss:#050d14;
+    --deep:#0a1a26;
+    --panel:rgba(160,200,215,0.055);
+    --panel-border:rgba(160,210,225,0.14);
+    --surface:#0e2433;
+    --foam:#eaf6f8;
+    --mist:#8aa8b4;
+    --tide:#22c1c9;
+    --tide-bright:#5be8e0;
+    --kelp:#4d8b7c;
+    --coral:#e8895b;
+    --alert:#e6b95c;
+    --danger:#e0616b;
+    --good:#5bd48a;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;background:var(--abyss);color:var(--foam);font-family:'Inter',sans-serif;overflow-x:hidden;}
+  ::selection{background:var(--tide);color:#05141a;}
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;margin:0;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  button{font-family:inherit;cursor:pointer;}
+  a{color:inherit;}
+
+  .view{display:none;min-height:100vh;}
+  .view.active{display:block;}
+
+  #landing-canvas{position:fixed;inset:0;z-index:0;}
+  .landing-nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:26px 48px;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:600;font-size:19px;letter-spacing:0.01em;}
+  .brand-mark{width:30px;height:30px;border-radius:50%;object-fit:cover;box-shadow:0 0 18px rgba(34,193,201,0.55);display:inline-block;flex-shrink:0;}
+  .landing-nav-links{display:flex;gap:34px;font-size:14.5px;color:var(--mist);}
+  .landing-nav-links span:hover{color:var(--foam);cursor:pointer;}
+
+  .hero{position:relative;z-index:2;max-width:760px;margin:9vh auto 0;padding:0 24px;text-align:center;}
+  .hero-eyebrow{color:var(--tide-bright);font-size:14.5px;margin-bottom:18px;}
+  .hero h1{font-size:clamp(38px,6vw,64px);line-height:1.06;font-weight:600;}
+  .hero h1 em{font-style:normal;color:var(--tide-bright);}
+  .hero p{color:var(--mist);font-size:18px;line-height:1.6;max-width:560px;margin:22px auto 0;}
+  .hero-ctas{display:flex;gap:14px;justify-content:center;margin-top:34px;}
+  .btn{border:none;border-radius:9px;padding:13px 24px;font-size:15px;font-weight:600;transition:transform .15s ease, box-shadow .15s ease, background .15s ease;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:linear-gradient(135deg,var(--tide),var(--kelp));color:#04141a;box-shadow:0 8px 24px rgba(34,193,201,0.3);}
+  .btn-primary:hover{box-shadow:0 10px 30px rgba(34,193,201,0.45);}
+  .btn-ghost{background:rgba(255,255,255,0.05);color:var(--foam);border:1px solid var(--panel-border);}
+  .btn-ghost:hover{background:rgba(255,255,255,0.09);}
+  .btn-sm{padding:9px 16px;font-size:13.5px;border-radius:8px;}
+
+  .feature-grid{position:relative;z-index:2;max-width:1040px;margin:11vh auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  @media (max-width:860px){.feature-grid{grid-template-columns:repeat(2,1fr);}.landing-nav{padding:20px 20px;}}
+  @media (max-width:520px){.feature-grid{grid-template-columns:1fr;}.hero-ctas{flex-direction:column;align-items:center;}}
+  .feature-card{background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);padding:22px 18px;backdrop-filter:blur(14px);}
+  .feature-card .fi{width:34px;height:34px;border-radius:9px;background:rgba(34,193,201,0.14);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--tide-bright);font-size:17px;}
+  .feature-card h4{font-size:15.5px;margin-bottom:6px;}
+  .feature-card p{font-size:13px;color:var(--mist);line-height:1.5;margin:0;}
+
+  .principle-strip{position:relative;z-index:2;max-width:720px;margin:9vh auto 0;padding:26px 24px 90px;text-align:center;border-top:1px solid var(--panel-border);}
+  .principle-strip p{color:var(--mist);font-size:15px;font-family:'IBM Plex Mono';}
+  .principle-strip strong{color:var(--foam);}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0c202c;border:1px solid var(--good);color:var(--good);padding:12px 20px;border-radius:10px;font-size:13.5px;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+  .toast.show{display:block;animation:toastIn .2s ease;}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+
+  .nav-right{display:flex;gap:10px;align-items:center;}
+  .path{position:relative;z-index:2;max-width:840px;margin:11vh auto 0;padding:0 24px;}
+  .path h2{font-size:28px;margin-bottom:8px;}
+  .path > p{color:var(--mist);font-size:15px;line-height:1.6;margin:0 0 22px;max-width:560px;}
+  .path ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--panel-border);}
+  .path li{position:relative;padding:12px 0 12px 26px;}
+  .path li::before{content:attr(data-n);position:absolute;left:-13px;top:12px;width:25px;height:25px;border-radius:50%;background:var(--deep);border:1px solid var(--tide);color:var(--tide-bright);font-size:12.5px;display:flex;align-items:center;justify-content:center;}
+  .path li b{display:block;font-family:'Space Grotesk';font-size:16px;font-weight:500;}
+  .path li span{color:var(--mist);font-size:13.5px;line-height:1.5;}
+  .why{position:relative;z-index:2;max-width:840px;margin:10vh auto 0;padding:0 24px;}
+  .why h2{font-size:26px;margin-bottom:10px;}
+  .why p{color:var(--mist);font-size:15.5px;line-height:1.7;margin:0;max-width:600px;}
+  .principle-strip p{font-family:'Inter',sans-serif;}
+  .btn:focus-visible,.role-card:focus-visible{outline:2px solid var(--tide-bright);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){.btn{transition:none;}}
+</style>
+</head>
+<body>
+
+<div class="view active" id="view-landing">
+  <canvas id="landing-canvas"></canvas>
+  <nav class="landing-nav">
+    <div class="brand"><span data-i18n="brand">SagarDrishti</span></div>
+    <div class="nav-right">
+      <button class="btn btn-ghost btn-sm" id="lang-toggle" type="button" title="Language / भाषा">हिं</button>
+      <button class="btn btn-ghost btn-sm" id="btn-start-nav" data-i18n="open">Open explorer</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-eyebrow" data-i18n="eyebrow">Ocean science for every classroom</div>
+    <h1 data-i18n="h1">Learn how the ocean works, with real data</h1>
+    <p data-i18n="sub">Explore live temperature and salinity readings from ocean robots, in an interactive 3D view. Guided lessons, an AI tutor and quizzes, in English and Hindi.</p>
+    <div class="hero-ctas">
+      <button class="btn btn-primary" id="btn-launch" data-i18n="cta1">Start learning</button>
+      <button class="btn btn-ghost" id="btn-learn" data-i18n="cta2">See what is inside</button>
+    </div>
+  </div>
+
+  <div class="feature-grid" id="feature-grid">
+    <div class="feature-card"><div class="fi">◐</div><h4 data-i18n="f1h">3D ocean explorer</h4><p data-i18n="f1p">Slice through the water column and watch floats dive and rise in real depth.</p></div>
+    <div class="feature-card"><div class="fi">✦</div><h4 data-i18n="f2h">AI ocean tutor</h4><p data-i18n="f2p">Ask what you are looking at. Answers come from the data on your screen.</p></div>
+    <div class="feature-card"><div class="fi">☰</div><h4 data-i18n="f3h">Guided lessons and quizzes</h4><p data-i18n="f3p">Five short lessons steer the explorer for you. Quizzes explain every answer.</p></div>
+    <div class="feature-card"><div class="fi">अ</div><h4 data-i18n="f4h">Hindi and voice</h4><p data-i18n="f4p">Switch languages any time. Ask by voice and hear answers read aloud.</p></div>
+  </div>
+
+  <section class="path">
+    <h2 data-i18n="ph">Your learning path</h2>
+    <p data-i18n="pp">Each lesson takes about five minutes and uses the live explorer, not slides.</p>
+    <ol>
+      <li data-n="1"><b data-i18n="l1h">Meet an Argo float</b><span data-i18n="l1p">Robots that dive 2,000 m and report by satellite.</span></li>
+      <li data-n="2"><b data-i18n="l2h">Warm top, cold bottom</b><span data-i18n="l2p">Find the thermocline yourself.</span></li>
+      <li data-n="3"><b data-i18n="l3h">Salt of the sea</b><span data-i18n="l3p">Why the Arabian Sea and Bay of Bengal differ.</span></li>
+      <li data-n="4"><b data-i18n="l4h">The ocean and the monsoon</b><span data-i18n="l4p">How distant seas shape rain in Madhya Pradesh.</span></li>
+      <li data-n="5"><b data-i18n="l5h">Can we trust the data?</b><span data-i18n="l5p">Compare a computer model with real measurements.</span></li>
+    </ol>
+  </section>
+
+  <section class="why">
+    <h2 data-i18n="wh">Why an ocean tool in Madhya Pradesh?</h2>
+    <p data-i18n="wp">The monsoon that waters our farms is born over the Indian Ocean. Students far from any coast can still see how that ocean warms, mixes and moves, using the same public data scientists use.</p>
+  </section>
+
+  <div class="principle-strip"><p><span data-i18n="src">Built on public</span> <strong>Argo INCOIS</strong> <span data-i18n="src2">data.</span></p></div>
+</div>
+
+<script>
+var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+var lang=LS.get('SagarDrishti_lang','en');
+var T={
+ en:{brand:'SagarDrishti',open:'Open explorer',eyebrow:'Ocean science for every classroom',h1:'Learn how the ocean works, with real data',
+  sub:'Explore live temperature and salinity readings from ocean robots, in an interactive 3D view. Guided lessons, an AI tutor and quizzes, in English and Hindi.',
+  cta1:'Start learning',cta2:'See what is inside',
+  f1h:'3D ocean explorer',f1p:'Slice through the water column and watch floats dive and rise in real depth.',
+  f2h:'AI ocean tutor',f2p:'Ask what you are looking at. Answers come from the data on your screen.',
+  f3h:'Guided lessons and quizzes',f3p:'Five short lessons steer the explorer for you. Quizzes explain every answer.',
+  f4h:'Hindi and voice',f4p:'Switch languages any time. Ask by voice and hear answers read aloud.',
+  ph:'Your learning path',pp:'Each lesson takes about five minutes and uses the live explorer, not slides.',
+  l1h:'Meet an Argo float',l1p:'Robots that dive 2,000 m and report by satellite.',
+  l2h:'Warm top, cold bottom',l2p:'Find the thermocline yourself.',
+  l3h:'Salt of the sea',l3p:'Why the Arabian Sea and Bay of Bengal differ.',
+  l4h:'The ocean and the monsoon',l4p:'How distant seas shape rain in Madhya Pradesh.',
+  l5h:'Can we trust the data?',l5p:'Compare a computer model with real measurements.',
+  wh:'Why an ocean tool in Madhya Pradesh?',
+  wp:'The monsoon that waters our farms is born over the Indian Ocean. Students far from any coast can still see how that ocean warms, mixes and moves, using the same public data scientists use.',
+  src:'Built on public',src2:'data.',lang_btn:'हिं'},
+ hi:{brand:'सागरदृष्टि',open:'एक्सप्लोरर खोलें',eyebrow:'हर कक्षा के लिए समुद्र विज्ञान',h1:'असली आँकड़ों से जानें समुद्र कैसे काम करता है',
+  sub:'समुद्री रोबोट से मिले तापमान और लवणता के ताज़ा आँकड़े इंटरैक्टिव 3D दृश्य में देखें। हिंदी और अंग्रेज़ी में गाइडेड पाठ, AI ट्यूटर और क्विज़।',
+  cta1:'सीखना शुरू करें',cta2:'अंदर क्या है देखें',
+  f1h:'3D समुद्र एक्सप्लोरर',f1p:'पानी की परतों को काटकर देखें और फ्लोट को असली गहराई में गोता लगाते देखें।',
+  f2h:'AI समुद्र ट्यूटर',f2p:'पूछें कि आप क्या देख रहे हैं। उत्तर आपकी स्क्रीन के आँकड़ों से आते हैं।',
+  f3h:'गाइडेड पाठ और क्विज़',f3p:'पाँच छोटे पाठ आपके लिए एक्सप्लोरर चलाते हैं। क्विज़ हर उत्तर समझाते हैं।',
+  f4h:'हिंदी और आवाज़',f4p:'कभी भी भाषा बदलें। आवाज़ से पूछें और उत्तर सुनें।',
+  ph:'आपका सीखने का रास्ता',pp:'हर पाठ लगभग पाँच मिनट का है और स्लाइड नहीं, लाइव एक्सप्लोरर इस्तेमाल करता है।',
+  l1h:'आर्गो फ्लोट से मिलिए',l1p:'रोबोट जो 2,000 मीटर गोता लगाकर सैटेलाइट से रिपोर्ट भेजते हैं।',
+  l2h:'ऊपर गर्म, नीचे ठंडा',l2p:'थर्मोक्लाइन खुद खोजें।',
+  l3h:'समुद्र का नमक',l3p:'अरब सागर और बंगाल की खाड़ी अलग क्यों हैं।',
+  l4h:'समुद्र और मानसून',l4p:'दूर के समुद्र मध्य प्रदेश की बारिश को कैसे गढ़ते हैं।',
+  l5h:'क्या आँकड़ों पर भरोसा करें?',l5p:'कंप्यूटर मॉडल की असली माप से तुलना करें।',
+  wh:'मध्य प्रदेश में समुद्र का औज़ार क्यों?',
+  wp:'जो मानसून हमारे खेतों को सींचता है, वह हिंद महासागर के ऊपर बनता है। तट से दूर के छात्र भी उन्हीं सार्वजनिक आँकड़ों से देख सकते हैं कि यह महासागर कैसे गर्म होता, घुलता-मिलता और बहता है, जिन्हें वैज्ञानिक इस्तेमाल करते हैं।',
+  src:'सार्वजनिक',src2:'आँकड़ों पर आधारित।',lang_btn:'EN'}
+};
+function apply(){
+ document.documentElement.lang=lang==='hi'?'hi':'en';
+ document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');el.textContent=(T[lang]&&T[lang][k])||T.en[k]||el.textContent;});
+ document.getElementById('lang-toggle').textContent=T[lang].lang_btn;
+}
+document.getElementById('lang-toggle').addEventListener('click',function(){lang=lang==='en'?'hi':'en';LS.set('SagarDrishti_lang',lang);apply();});
+function go(){window.location.href='explorer.html';}
+document.getElementById('btn-launch').addEventListener('click',go);
+document.getElementById('btn-start-nav').addEventListener('click',go);
+document.getElementById('btn-learn').addEventListener('click',function(){document.getElementById('feature-grid').scrollIntoView({behavior:'smooth'});});
+apply();
+
+/* lightweight 2D canvas bubble field for the landing background */
+(function initLandingBackground(){
+  var c=document.getElementById('landing-canvas');var ctx=c.getContext('2d');var bubbles=[];
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){c.width=innerWidth;c.height=innerHeight;}
+  function seed(){bubbles=Array.from({length:46},function(){return{x:Math.random()*innerWidth,y:innerHeight+Math.random()*innerHeight,r:1.5+Math.random()*3.5,s:0.2+Math.random()*0.6,a:0.08+Math.random()*0.2};});}
+  resize();seed();addEventListener('resize',resize);
+  function loop(){
+    ctx.fillStyle='#050d14';ctx.fillRect(0,0,c.width,c.height);
+    var grad=ctx.createRadialGradient(c.width*0.3,c.height*0.1,0,c.width*0.3,c.height*0.1,c.width*0.8);
+    grad.addColorStop(0,'rgba(34,193,201,0.08)');grad.addColorStop(1,'rgba(5,13,20,0)');
+    ctx.fillStyle=grad;ctx.fillRect(0,0,c.width,c.height);
+    bubbles.forEach(function(b){
+      if(!reduce)b.y-=b.s;
+      if(b.y<-10){b.y=c.height+10;b.x=Math.random()*c.width;}
+      ctx.beginPath();ctx.fillStyle='rgba(94,232,224,'+b.a+')';ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();
+    });
+    if(!reduce)requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+</body>
+</html>
