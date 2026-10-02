@@ -48,7 +48,7 @@ but the default, and the normal path, is that both run automatically.
 
 Run:
     pip install flask flask-cors pandas requests xarray netCDF4 numpy copernicusmarine
-    python Server.py
+    python server.py
     open http://localhost:8000/index.html
 """
 from __future__ import annotations
@@ -72,7 +72,7 @@ from flask_cors import CORS
 
 from Capernicus_model import ModelFetchError, build_copernicus_model
 from Fetch_incois_argo import ArgoFetchError, fetch_argo
-from tutor_api import tutor_bp
+from tutor_api import tutor_bp  # Gemini-backed /api/tutor and /api/quiz
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s %(message)s")
 log = logging.getLogger("sagardrishti")

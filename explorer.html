@@ -155,6 +155,7 @@
   .insight-strip{background:linear-gradient(135deg,rgba(34,193,201,0.1),rgba(77,139,124,0.06));border:1px solid var(--panel-border);border-radius:var(--radius);padding:16px 20px;font-size:13.5px;color:var(--mist);display:flex;align-items:center;gap:12px;}
 
 
+  /* --- quality panel section --- */
   .qscore{display:flex;align-items:center;gap:16px;margin-top:16px;}
   .qscore-ring{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:17px;flex-shrink:0;}
 
@@ -190,8 +191,7 @@
   .subview.active{display:block;}
   #subview-explore.active{display:grid;}
 
-
-  .edu-hint{position:absolute;top:60px;left:16px;right:16px;z-index:5;background:rgba(6,16,22,0.72);border:1px solid var(--panel-border);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--mist);backdrop-filter:blur(8px);pointer-events:none;max-width:340px;}
+  .edu-hint{position:absolute;top:auto;bottom:88px;left:16px;right:auto;z-index:5;background:rgba(6,16,22,0.72);border:1px solid var(--panel-border);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--mist);backdrop-filter:blur(8px);pointer-events:none;max-width:340px;}
   .edu-hint b{color:var(--tide-bright);}
 
   /* ---- glossary tooltips ---- */
@@ -202,7 +202,7 @@
   .gloss:hover .gloss-tip,
   .gloss.tip-open .gloss-tip{opacity:1;visibility:visible;transform:translateY(0);}
 
-  /* ---- narrative (plain-language) readout for the RMSE card, education mode ---- */
+  /* ---- narrative (plain-language) readout for the RMSE card ---- */
   .rmse-narrative{font-size:12px;color:var(--mist);line-height:1.5;max-width:190px;}
   .rmse-narrative b{color:var(--good);}
 
@@ -341,6 +341,8 @@
   #lesson-coach .lc-actions{display:flex;gap:10px;justify-content:flex-end;}
   .lc-x{background:none;border:none;color:var(--mist);font-size:18px;line-height:1;}
 
+  .quiz-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+  .quiz-tools #quiz-ai-note{font-size:12.5px;color:var(--mist);}
   .quiz-card{background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);padding:24px 22px;max-width:700px;}
   .quiz-q{font-family:'Space Grotesk',sans-serif;font-size:19px;line-height:1.4;margin:0 0 18px;}
   .quiz-opt{display:block;width:100%;text-align:left;background:rgba(255,255,255,0.04);border:1px solid var(--panel-border);color:var(--foam);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:14.5px;}
@@ -393,8 +395,8 @@
     </div>
     <div class="topbar-right">
       <button class="lang-btn" id="lang-toggle" type="button" title="Language / भाषा">हिं</button>
-      <div class="status-pill"><span class="status-dot"></span><span class="status-text" id="role-status-text">Live data &middot; synced</span></div>
-      <button class="avatar" id="avatar-initial" title="Sign out">R</button>
+      <div class="status-pill"><span class="status-dot"></span><span class="status-text" id="status-text">Live data &middot; synced</span></div>
+      <button class="avatar" id="avatar-initial" title="Back to home">S</button>
     </div>
   </div>
 
@@ -546,7 +548,7 @@
           </div>
           <div class="viewer-badge rmse-card" id="rmse-card">
             <div class="k"><span class="gloss">RMSE<span class="gloss-tip">Root Mean Square Error &mdash; the average gap between the model's guess and the real buoy reading. Lower is better.</span></span> VS ARGO</div>
-            <div class="rmse-narrative" id="rmse-narrative-val">The corrected model is now within <b>0.38&deg;C</b> of the real buoy reading &mdash; a strong match.</div>
+            <div class="rmse-narrative" id="rmse-narrative-val">Illustrative example: after correction the model sits within about <b>0.4&deg;C</b> of the float reading.</div>
           </div>
         </div>
         <div class="viewer-topbar-right">
@@ -561,7 +563,7 @@
         </div>
       </div>
 
-      <div class="edu-hint">
+      <div class="edu-hint" data-hi="हर रंगीन पट्टी एक <b>तापमान परत</b> है। नीले घेरे वाला बिंदु असली समुद्री रोबोट (आर्गो बॉय) है — दृश्य A / दृश्य B बदलकर देखें कि उसके आसपास मॉडल खुद को कैसे सुधारता है।">
         Each colored band is a <b>temperature layer</b>. The dot ringed in cyan is a real ocean robot (Argo buoy) — toggle View A / View B to see the model correct itself around it.
       </div>
 
@@ -628,7 +630,6 @@
           </div>
           <div class="chart-box"><canvas class="mini-chart" id="profile-chart"></canvas></div>
 
-
           <div class="link-row">
             <button class="link-btn" id="btn-provenance">View data provenance <span>&rsaquo;</span></button>
             <button class="link-btn" id="btn-goto-compare">Compare with model <span>&rsaquo;</span></button>
@@ -669,6 +670,7 @@
     <div class="edu-wrap">
       <h2 data-i18n="quiz_title">Test what you learned</h2>
       <p class="edu-sub" data-i18n="quiz_sub">Eight quick questions. Every answer comes with a short explanation.</p>
+      <div class="quiz-tools"><button class="edu-btn ghost" id="quiz-ai" type="button" data-i18n="ai_quiz">New questions with AI</button><button class="edu-btn ghost" id="quiz-builtin" type="button" data-i18n="builtin_quiz">Built-in questions</button><span id="quiz-ai-note"></span></div>
       <div class="quiz-card" id="quiz-card"></div>
     </div>
   </div>
@@ -737,21 +739,21 @@
 <div class="modal-overlay" id="modal-about">
   <div class="modal-box">
     <div class="modal-head"><h3>About Sagar Drishti</h3><button class="modal-close" data-close="modal-about">&times;</button></div>
-    <p style="color:var(--mist);font-size:13.5px;line-height:1.7;">
+    <p style="color:var(--mist);font-size:13.5px;line-height:1.7;" data-hi="<b style=&quot;color:var(--foam);&quot;>सागर दृष्टि</b> (<span class=&quot;mono&quot; style=&quot;color:var(--tide-bright);&quot;>&quot;समुद्र की दृष्टि&quot;</span>) एक 3D महासागर डेटा विज़ुअलाइज़ेशन प्लेटफ़ॉर्म है, जो INCOIS (भारतीय राष्ट्रीय महासागर सूचना सेवा केंद्र) के लिए बनाया गया है। यह पानी के स्तंभ को एक इंटरैक्टिव कटाव के रूप में दिखाता है, जिसमें असली आर्गो फ्लोट की स्थिति और प्रोफ़ाइल के साथ तापमान और लवणता के ग्रिड आँकड़े भी हैं।">
       <b style="color:var(--foam);">Sagar Drishti</b> (<span class="mono" style="color:var(--tide-bright);">"ocean vision"</span>) is a 3D ocean data visualization platform built for INCOIS
       (Indian National Centre for Ocean Information Services). It renders the water column as an
       interactive cross-section — real Argo float positions and profiles alongside gridded
       temperature and salinity fields.
     </p>
-    <p style="color:var(--mist);font-size:13.5px;line-height:1.7;margin-top:10px;">
+    <p style="color:var(--mist);font-size:13.5px;line-height:1.7;margin-top:10px;" data-hi="<b style=&quot;color:var(--foam);&quot;>दृश्य A / दृश्य B</b> बटन दिखाता है कि EnOI डेटा असिमिलेशन असल में क्या करता है: यह कच्चे समुद्री मॉडल को असली बॉय के माप से मिलाकर सुधारता है, जिससे प्रेक्षणों के मुकाबले RMSE साफ़ घट जाता है।">
       The <b style="color:var(--foam);">View A / View B</b> toggle shows what EnOI data assimilation
       actually does: it corrects the raw ocean model to align with real in-situ buoy readings,
       measurably cutting RMSE against observations.
     </p>
-    <p style="color:var(--mist);font-size:13.5px;line-height:1.7;margin-top:10px;">
+    <p style="color:var(--mist);font-size:13.5px;line-height:1.7;margin-top:10px;" data-hi="पाइपलाइन: <span class=&quot;mono&quot;>INCOIS ERDDAP (आर्गो) + कॉपरनिकस मरीन (मॉडल) → Flask बैकएंड → 3D व्यूअर → पाठ, तुलना और क्विज़।</span>">
       Pipeline: <span class="mono">INCOIS ERDDAP (Argo) + Copernicus Marine (model) &rarr; Flask backend &rarr; 3D viewer &rarr; Lessons, Compare &amp; Quiz.</span>
     </p>
-    <p style="color:var(--mist);font-size:12px;line-height:1.6;margin-top:14px;border-top:1px solid var(--panel-border);padding-top:12px;">
+    <p style="color:var(--mist);font-size:12px;line-height:1.6;margin-top:14px;border-top:1px solid var(--panel-border);padding-top:12px;" data-hi="मॉडल बनाम अवलोकन की तुलना और गहराई/समय/चर के आँकड़े उपलब्ध होने पर लाइव बैकएंड डेटा से लिए जाते हैं; अगर सर्वर या डेटा-स्रोत की समस्या से लाइव डेटा नहीं मिल पाता, तो इंटरफ़ेस नमूना/वैकल्पिक डेटा दिखा सकता है।">
       Model vs. observation comparisons and depth/time/variable data are sourced from live backend data when available; if live data retrieval fails due to a server or data-source issue, the interface may display fallback/illustrative data.
     </p>
   </div>
@@ -791,11 +793,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 /* ===================================================================
-   ROLE GUARD
+   HOME BUTTON
    =================================================================== */
-/* The app always runs in guided learning mode. */
-document.getElementById('avatar-initial').textContent = 'E';
-document.getElementById('role-status-text').textContent = 'Live data \u00b7 guided session';
 document.getElementById('avatar-initial').addEventListener('click', ()=>{
   window.location.href = 'index.html';
 });
@@ -1142,14 +1141,44 @@ function refreshTimeReadout(){
   updateModelTimeBadge();
 }
 
+/* Real RMSE (raw model vs Argo obs) across every currently loaded real
+   float, at the selected time step — replaces the static demo numbers on
+   the RMSE badge whenever Copernicus model data is loaded. */
+function computeRealRmse(){
+  if (!MODEL_DATA || !floatDefs.length) return null;
+  let sumSq = 0, n = 0;
+  floatDefs.filter(f=>f.isReal).forEach(def=>{
+    const profile = floatProfileAt(def);
+    if (!profile.modelReal) return;
+    profile.temps.forEach((v,i)=>{
+      const o = profile.obsTemps[i];
+      if (v!=null && o!=null){ sumSq += (v-o)*(v-o); n++; }
+    });
+  });
+  return n ? Math.sqrt(sumSq/n) : null;
+}
+
+function updateRmseCard(){
+  const narrEl = document.getElementById('rmse-narrative-val');
+  if (!narrEl) return;
+  const rmse = computeRealRmse();
+  if (rmse != null){
+    const phrase = rmse < 0.5 ? 'a strong match' : (rmse < 1.0 ? 'a good match' : 'a rough match');
+    narrEl.innerHTML = `Live model vs real float: the gap is about <b>${rmse.toFixed(2)}&deg;C</b> &mdash; ${phrase}.`;
+  } else {
+    narrEl.innerHTML = 'Illustrative example: after correction the model sits within about <b>0.4&deg;C</b> of the float reading.';
+  }
+}
+
 /* Single entry point for every control that changes "which day are we
    looking at" (slider drag, play/pause tick, step back, reset). Keeps the
-   side panel and Compare tab in sync
+   side panel, Compare tab and the RMSE badge all in sync
    with the same state.timeIdx instead of drifting out of step. */
 function refreshForTimeChange(){
   refreshTimeReadout();
   if (state.selectedFloatIdx !== null && floats[state.selectedFloatIdx]) selectFloat(state.selectedFloatIdx, true);
   renderCompare();
+  updateRmseCard();
 }
 document.getElementById('time-slider').addEventListener('input', (e)=>{
   state.timeIdx = parseInt(e.target.value, 10);
@@ -2076,7 +2105,7 @@ function setLiveStatusText(isLive, isModelLive){
     ? (isModelLive ? 'Live ERDDAP + Copernicus data' : 'Live ERDDAP data')
     : '';
   const sessionBit = 'guided session';
-  document.getElementById('role-status-text').textContent = dataBit ? (dataBit + ' \u00b7 ' + sessionBit) : sessionBit;
+  document.getElementById('status-text').textContent = dataBit ? (dataBit + ' \u00b7 ' + sessionBit) : sessionBit;
 }
 
 /* applyLiveData(data, modelData) does the actual "swap the UI over to
@@ -2129,6 +2158,7 @@ function applyLiveData(data, modelData){
   populateCompareSelectors();
   renderCompare();
   refreshTimeReadout();
+  updateRmseCard();
   setLiveStatusText(true, !!modelData);
   showToast('Loaded ' + floatDefs.length + ' real Argo float(s)'
     + (modelData ? ' + Copernicus model profiles' : ' (Copernicus model not found, using demo offset)'));
@@ -2144,7 +2174,8 @@ async function tryLoadRealData(){
    in the control panel to the backend (server.py), which runs
    fetch_incois_argo.py (+ capernicus_model.py) for exactly the box,
    dates and depth the user picked, and returns fresh JSON. Every panel
-   (3D view, Compare, Profile, Trajectory, Metadata, Provenance) already reads from REAL_DATA / MODEL_BY_FLOAT via
+   (3D view, Compare, Profile, Trajectory, Metadata, Quality,
+   Provenance) already reads from REAL_DATA / MODEL_BY_FLOAT via
    applyLiveData(), so nothing else needs to change once this lands.
    =================================================================== */
 const btnFetchLive = document.getElementById('btn-fetch-live');
@@ -2241,7 +2272,8 @@ var T={
   demo_note:'Demo answers. Connect /api/tutor to use the live AI tutor.',
   listening:'Listening…',thinking:'Thinking…',
   chips:['Explain this view','What is a thermocline?','Why is the Bay of Bengal fresher?','How does this affect the monsoon?'],
-  b1:'First lesson',b2:'All lessons',b3:'Quiz 6+',b4:'Perfect quiz',lang_btn:'हिं'},
+  b1:'First lesson',b2:'All lessons',b3:'Quiz 6+',b4:'Perfect quiz',lang_btn:'हिं',
+  ai_quiz:'New questions with AI',builtin_quiz:'Built-in questions',ai_loading:'Writing questions…',ai_ok:'AI-written questions for this topic.',ai_fail:'AI quiz is not connected yet. Showing the built-in questions.',tutor_live:''},
  hi:{nav_explore:'एक्सप्लोर',nav_compare:'तुलना',nav_lessons:'पाठ',nav_quiz:'क्विज़',
   lessons_title:'एक-एक पाठ में समुद्र को समझें',
   lessons_sub:'हर पाठ 3D एक्सप्लोरर को आपके लिए चलाता है और असली आर्गो फ्लोट आँकड़ों से समझाता है कि आप क्या देख रहे हैं।',
@@ -2256,7 +2288,8 @@ var T={
   demo_note:'डेमो उत्तर। लाइव AI ट्यूटर के लिए /api/tutor जोड़ें।',
   listening:'सुन रहा हूँ…',thinking:'सोच रहा हूँ…',
   chips:['यह दृश्य समझाइए','थर्मोक्लाइन क्या है?','बंगाल की खाड़ी कम खारी क्यों है?','इसका मानसून पर क्या असर है?'],
-  b1:'पहला पाठ',b2:'सभी पाठ',b3:'क्विज़ 6+',b4:'पूरे अंक',lang_btn:'EN'}
+  b1:'पहला पाठ',b2:'सभी पाठ',b3:'क्विज़ 6+',b4:'पूरे अंक',lang_btn:'EN',
+  ai_quiz:'AI से नए प्रश्न',builtin_quiz:'पहले से बने प्रश्न',ai_loading:'प्रश्न लिखे जा रहे हैं…',ai_ok:'इस विषय पर AI के लिखे प्रश्न।',ai_fail:'AI क्विज़ अभी जुड़ा नहीं है। पहले से बने प्रश्न दिखा रहे हैं।',tutor_live:''}
 };
 function t(k){return (T[lang]&&T[lang][k])||T.en[k]||k;}
 
@@ -2347,6 +2380,7 @@ var QUIZ=[
 {q:{en:'Why compare a model with real float readings?',hi:'मॉडल की तुलना असली फ्लोट रीडिंग से क्यों करें?'},o:[{en:'To see how accurate the model is',hi:'यह देखने के लिए कि मॉडल कितना सही है'},{en:'To make floats faster',hi:'फ्लोट को तेज़ करने के लिए'},{en:'To cool the ocean',hi:'समुद्र को ठंडा करने के लिए'},{en:'There is no reason',hi:'कोई कारण नहीं'}],c:0,w:{en:'The gap between model and measurement shows the model error.',hi:'मॉडल और माप के बीच का अंतर मॉडल की त्रुटि दिखाता है।'}},
 {q:{en:'How does the Indian Ocean connect to farms in Madhya Pradesh?',hi:'हिंद महासागर का मध्य प्रदेश के खेतों से क्या संबंध है?'},o:[{en:'Through the monsoon rains',hi:'मानसूनी बारिश के ज़रिए'},{en:'It does not',hi:'कोई संबंध नहीं'},{en:'By flooding fields daily',hi:'रोज़ खेतों में पानी भरकर'},{en:'Through floats in rivers',hi:'नदियों में फ्लोट के ज़रिए'}],c:0,w:{en:'Ocean warmth and moisture help drive the monsoon that waters the state.',hi:'समुद्र की गर्मी और नमी उस मानसून को चलाने में मदद करती है जो राज्य को सींचता है।'}}
 ];
+var QUIZ_BUILTIN=QUIZ.slice();
 var qz=null;
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=a[i];a[i]=a[j];a[j]=x;}return a;}
 function quizStart(){qz={i:0,score:0,order:shuffle(QUIZ.map(function(_,i){return i;})),answered:false};quizRender();}
@@ -2375,6 +2409,24 @@ function quizRender(){
   });holder.appendChild(b);
  });
 }
+
+
+function qFromServer(x){return {q:{en:x.q,hi:x.q},o:x.options.map(function(o){return {en:o,hi:o};}),c:x.answer,w:{en:x.why,hi:x.why}};}
+function setQuizNote(m){var n=$('quiz-ai-note');if(n)n.textContent=m||'';}
+function loadAiQuiz(){
+ var btn=$('quiz-ai');if(btn)btn.disabled=true;setQuizNote(t('ai_loading'));
+ var ctrl=('AbortController' in window)?new AbortController():null;
+ var timer=setTimeout(function(){if(ctrl)ctrl.abort();},30000);
+ fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lang:lang,n:5,context:ctx()}),signal:ctrl?ctrl.signal:undefined})
+ .then(function(r){if(!r.ok)return r.json().catch(function(){return {};}).then(function(j){throw new Error('http '+r.status+(j&&j.error?': '+j.error:''));});return r.json();})
+ .then(function(j){
+  if(!j||!j.questions||!j.questions.length)throw new Error('empty');
+  QUIZ=j.questions.map(qFromServer);quizStart();setQuizNote(t('ai_ok'));
+ })
+ .catch(function(e){console.warn('AI quiz failed:',e);QUIZ=QUIZ_BUILTIN.slice();quizStart();setQuizNote(t('ai_fail')+' ['+((e&&e.message)||'error')+']');})
+ .then(function(){clearTimeout(timer);if(btn)btn.disabled=false;});
+}
+function loadBuiltinQuiz(){QUIZ=QUIZ_BUILTIN.slice();quizStart();setQuizNote('');}
 
 /* ---------------- tutor ---------------- */
 var VARN={en:['Temperature','Salinity'],hi:['तापमान','लवणता']};
@@ -2415,7 +2467,7 @@ function localAnswer(q){
  for(var i=0;i<KB.length;i++){for(var j=0;j<KB[i].k.length;j++){if(s.indexOf(KB[i].k[j])>-1){return KB[i].f?KB[i].f():tr(KB[i].a);}}}
  return lang==='hi'?'मैं इस बारे में डेमो मोड में पक्का उत्तर नहीं दे सकता। थर्मोक्लाइन, लवणता, आर्गो फ्लोट, मानसून या "यह दृश्य समझाइए" पूछकर देखें।':'I cannot answer that in demo mode. Try asking about the thermocline, salinity, Argo floats, the monsoon, or "explain this view".';
 }
-var speakOn=false,tutorInit=false,rec=null,live=false;
+var speakOn=false,tutorInit=false,rec=null,live=false,chat=[];
 function addMsg(text,who){var log=$('tutor-log'),m=document.createElement('div');m.className='msg '+who;m.textContent=text;log.appendChild(m);log.scrollTop=log.scrollHeight;return m;}
 function speak(text){
  if(!speakOn||!('speechSynthesis' in window))return;
@@ -2425,11 +2477,11 @@ function ask(q){
  q=(q||'').trim();if(!q)return;addMsg(q,'me');$('tutor-input').value='';
  var wait=addMsg(t('thinking'),'bot');
  var ctrl=('AbortController' in window)?new AbortController():null;
- var timer=setTimeout(function(){if(ctrl)ctrl.abort();},30000);
- fetch('/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,context:ctx(),lang:lang}),signal:ctrl?ctrl.signal:undefined})
+ var timer=setTimeout(function(){if(ctrl)ctrl.abort();},7000);
+ fetch('/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,context:ctx(),lang:lang,history:chat.slice(-6)}),signal:ctrl?ctrl.signal:undefined})
  .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();})
- .then(function(j){if(!j||!j.answer)throw new Error('empty');live=true;wait.textContent=j.answer;speak(j.answer);})
- .catch(function(){live=false;var a=localAnswer(q);wait.textContent=a;speak(a);})
+ .then(function(j){if(!j||!j.answer)throw new Error('empty');live=true;wait.textContent=j.answer;chat.push({role:'user',content:q},{role:'assistant',content:j.answer});speak(j.answer);})
+ .catch(function(e){console.warn('AI tutor failed:',e);live=false;var a=localAnswer(q);wait.textContent=a;speak(a);})
  .then(function(){clearTimeout(timer);$('tutor-note').textContent=live?'':t('demo_note');$('tutor-log').scrollTop=$('tutor-log').scrollHeight;});
 }
 function renderTutorChrome(){
@@ -2475,10 +2527,168 @@ function boot(){
  if(lb)lb.addEventListener('click',function(){lang=lang==='en'?'hi':'en';LS.set('SagarDrishti_lang',lang);
   if(tutorInit){var first=$('tutor-log').firstChild;if(first&&first.className.indexOf('bot')>-1)first.textContent=t('tutor_hi');}applyLang();});
  document.querySelectorAll('.topbar-nav button[data-target]').forEach(function(b){b.addEventListener('click',function(){var d=b.getAttribute('data-target');if(d==='lessons'||d==='quiz')closeCoach();});});
+ var qa=$('quiz-ai'),qb=$('quiz-builtin');if(qa)qa.addEventListener('click',loadAiQuiz);if(qb)qb.addEventListener('click',loadBuiltinQuiz);
  initTutor();quizStart();applyLang();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
+<style>
+.var-explainer{margin:10px 0 0;}
+.var-explainer details{background:rgba(34,193,201,0.08);border:1px solid var(--panel-border);border-radius:10px;padding:9px 11px;}
+.var-explainer summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--tide-bright);}
+.var-explainer .ve-row{margin-top:9px;font-size:12.5px;line-height:1.55;color:var(--mist);}
+.var-explainer .ve-row b{display:block;color:var(--foam);font-size:11px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px;}
+.var-explainer .ve-ask{margin-top:10px;width:100%;border:1px solid var(--panel-border);border-radius:8px;padding:8px;font-size:12.5px;background:rgba(34,193,201,0.14);color:var(--tide-bright);cursor:pointer;}
+.compare-wrap .var-explainer{margin:0 0 18px;}
+</style>
+<script>
+/* ===== Hindi translation layer + "explain in simple words" cards ===== */
+(function(){
+'use strict';
+var LSK='SagarDrishti_lang';
+function cur(){try{return localStorage.getItem(LSK)==='hi'?'hi':'en';}catch(e){return 'en';}}
+var lang=cur();
+var HI={
+'About':'परिचय','About Sagar Drishti':'सागर दृष्टि के बारे में',
+'LOCATION':'स्थान','Ocean basin (preset)':'महासागरीय बेसिन (प्रीसेट)','Bay of Bengal':'बंगाल की खाड़ी','Arabian Sea':'अरब सागर','Equatorial Indian Ocean':'भूमध्यरेखीय हिंद महासागर','Custom region…':'अपना क्षेत्र…',
+'Region map':'क्षेत्र का नक्शा','· tap to set a point':'· बिंदु चुनने के लिए टैप करें','Clicked point:':'चुना गया बिंदु:',
+'Min lat (°N)':'न्यूनतम अक्षांश (°उ.)','Max lat (°N)':'अधिकतम अक्षांश (°उ.)','Min lon (°E)':'न्यूनतम देशांतर (°पू.)','Max lon (°E)':'अधिकतम देशांतर (°पू.)',
+'MODEL':'मॉडल','Dataset':'डेटासेट','Copernicus Marine':'कॉपरनिकस मरीन','HYCOM (demo)':'HYCOM (डेमो)','ROMS (coming soon)':'ROMS (जल्द आ रहा है)','NEMO (coming soon)':'NEMO (जल्द आ रहा है)',
+'VARIABLE':'चर (क्या देखें)','Temperature':'तापमान','Salinity':'लवणता',
+'TIME RANGE':'समय सीमा','Start date':'शुरू की तारीख','End date':'अंतिम तारीख','EXACT':'सटीक','start':'शुरू','end':'अंत','▶ Play':'▶ चलाएँ','⏮ Back':'⏮ पीछे','↻ Reset':'↻ रीसेट',
+'DEPTH':'गहराई','Depth':'गहराई','Interpolated':'अनुमानित (इंटरपोलेटेड)','No correction (raw)':'कोई सुधार नहीं (कच्चा)',
+'also nudges temperatures at this depth, based on how closely they\'ve historically tracked the surface.':'इस गहराई के तापमान को भी सुधारता है, इस आधार पर कि वे पहले सतह के कितने करीब चलते रहे हैं।',
+'LIVE DATA':'लाइव डेटा','Fetch real INCOIS Argo floats (+ Copernicus model) for the region, dates and depth set above.':'ऊपर चुने क्षेत्र, तारीखों और गहराई के लिए असली INCOIS आर्गो फ्लोट (+ कॉपरनिकस मॉडल) लाएँ।',
+'Include model comparison':'मॉडल तुलना शामिल करें','Fetch live data':'लाइव डेटा लाएँ',
+'VISUALIZATION':'दृश्य सेटिंग','Vertical exaggeration':'ऊर्ध्वाधर विस्तार','Opacity':'पारदर्शिता',
+'PLAYBACK':'प्लेबैक','Float ascent/descent animation':'फ्लोट के ऊपर-नीचे जाने का एनिमेशन','LAYERS':'परतें','Current arrows':'धारा के तीर','Depth grid':'गहराई ग्रिड',
+'REGION':'क्षेत्र','MODEL · DATE':'मॉडल · तारीख','VS ARGO':'बनाम आर्गो','View A · Raw Model':'दृश्य A · कच्चा मॉडल','View B · Assimilated (':'दृश्य B · सुधारा हुआ (',
+'3D Cross-Section':'3D कटाव दृश्य','Top-Down':'ऊपर से','⚡ Rapid Insights':'⚡ त्वरित जानकारी','Reference Argo Buoy':'संदर्भ आर्गो बॉय','Orbit':'घुमाएँ',
+'Warm':'गर्म','Cold':'ठंडा','Fresher':'कम खारा','Saltier':'ज़्यादा खारा',
+'Select a float in the 3D view':'3D दृश्य में कोई फ्लोट चुनें','to see its profile and metadata.':'ताकि उसकी प्रोफ़ाइल और जानकारी दिखे।',
+'Profile':'प्रोफ़ाइल','Trajectory':'पथ','Metadata':'मेटाडेटा','FLOAT ID':'फ्लोट ID','STATUS':'स्थिति','CYCLE':'चक्र','PARK DEPTH':'ठहराव गहराई','POSITION (LAT, LON)':'स्थान (अक्षांश, देशांतर)',
+'View data provenance':'डेटा का स्रोत देखें','Compare with model':'मॉडल से तुलना करें',
+'Drift path plotted as longitude (x) vs latitude (y); white dot is the most recent fix.':'बहाव का रास्ता देशांतर (x) बनाम अक्षांश (y) पर दिखाया है; सफ़ेद बिंदु सबसे ताज़ा स्थान है।',
+'PLATFORM':'प्लेटफ़ॉर्म','DEPLOYED':'तैनाती','LAST TX':'अंतिम प्रसारण',
+'Model vs observation':'मॉडल बनाम अवलोकन','Check the INCOIS model value against a real Argo reading before trusting the gap between them.':'दोनों के अंतर पर भरोसा करने से पहले INCOIS मॉडल के मान को असली आर्गो माप से मिलाकर देखें।',
+'Observation':'अवलोकन (असली माप)','Variable':'चर (क्या देखें)',
+'REGION ·':'क्षेत्र ·','RANGE ·':'अवधि ·','SELECTED DATE ·':'चुनी गई तारीख ·',
+'✓ Eligible for comparison':'✓ तुलना के योग्य','◐ Partially eligible':'◐ आंशिक रूप से योग्य',
+'Model and observation can be compared directly.':'मॉडल और अवलोकन की सीधी तुलना की जा सकती है।',
+'Comparison possible with depth interpolation applied — interpret with slightly wider uncertainty.':'गहराई का अनुमान (इंटरपोलेशन) लगाकर तुलना संभव है — थोड़ी ज़्यादा अनिश्चितता के साथ समझें।',
+'Same variable':'एक ही चर','Compatible depth (exact)':'गहराई मेल खाती है (सटीक)','Compatible depth (interpolated)':'गहराई मेल खाती है (अनुमानित)',
+'DIFFERENCE':'अंतर',
+'Data provenance':'डेटा का स्रोत','Source':'स्रोत','Last updated':'आखिरी अपडेट','QC flag':'गुणवत्ता फ़्लैग',
+'Rapid insights':'त्वरित जानकारी'
+};
+var PAT=[
+[/^Float (\S+)$/,function(m){return 'फ्लोट '+m[1];}],
+[/^Compatible units \((.+)\)$/,function(m){return 'इकाइयाँ मेल खाती हैं ('+m[1]+')';}],
+[/^Spatial proximity \(within (.+)\)$/,function(m){return 'स्थान के हिसाब से पास ('+(HI[m[1]]||m[1])+' के भीतर)';}],
+[/^Compatible timestamp \((.+)\)$/,function(m){return 'समय मेल खाता है ('+m[1]+')';}],
+[/^MODEL \((.+)\)$/,function(m){return 'मॉडल ('+(HI[m[1]]||m[1])+')';}],
+[/^OBSERVATION \(Float (.+)\)$/,function(m){return 'अवलोकन (फ्लोट '+m[1]+')';}],
+[/^([+-]?[\d.]+)% \u00b7 Model (warmer\/higher|cooler\/lower)$/,function(m){return m[1]+'% \u00b7 मॉडल '+(m[2]==='warmer/higher'?'ज़्यादा गर्म/ऊँचा':'ज़्यादा ठंडा/नीचा');}],
+[/^Model and observation diverge by (.+) at (\d+) m \u2014 worth a closer look, not necessarily an error\.$/,function(m){return 'मॉडल और अवलोकन में '+m[2]+' मीटर पर '+m[1]+' का अंतर है — ध्यान से देखने लायक, ज़रूरी नहीं कि गलती हो।';}],
+[/^Model and observation show close agreement at (\d+) m \(difference (.+)\)\.$/,function(m){return m[1]+' मीटर पर मॉडल और अवलोकन लगभग एक जैसे हैं (अंतर '+m[2]+')।';}],
+[/^Live data \u00b7 (.+)$/,function(m){var d={'synced':'सिंक हो गया','guided session':'निर्देशित सत्र'};return 'लाइव डेटा \u00b7 '+(d[m[1]]||m[1]);}],
+[/^Box: (.+)$/,function(m){return 'क्षेत्र: '+m[1];}]
+];
+function xl(s){
+  if(Object.prototype.hasOwnProperty.call(HI,s))return HI[s];
+  for(var i=0;i<PAT.length;i++){var m=s.match(PAT[i][0]);if(m)return PAT[i][1](m);}
+  return null;
+}
+var orig=new WeakMap(),shown=new WeakMap();
+function skip(n){
+  var p=n.parentNode;if(!p)return true;
+  var tn=p.nodeName;if(tn==='SCRIPT'||tn==='STYLE'||tn==='TEXTAREA')return true;
+  return !!(p.closest&&p.closest('[data-hi],[data-i18n],.var-explainer,#tutor,#lesson-coach,#subview-lessons,#subview-quiz,.toast'));
+}
+function doNode(n){
+  if(skip(n))return;
+  var v=n.nodeValue;
+  if(orig.has(n)&&shown.get(n)===v){
+    if(lang==='en'){n.nodeValue=orig.get(n);orig.delete(n);shown.delete(n);}
+    return;
+  }
+  orig.delete(n);shown.delete(n);
+  if(lang!=='hi')return;
+  var m=v.match(/^(\s*)([\s\S]*?)(\s*)$/);if(!m[2])return;
+  var h=xl(m[2].replace(/\s+/g,' '));if(h===null)return;
+  var out=m[1]+h+m[3];orig.set(n,v);shown.set(n,out);n.nodeValue=out;
+}
+function walk(root){
+  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n,list=[];
+  while((n=w.nextNode()))list.push(n);
+  list.forEach(doNode);
+}
+function blocks(){
+  document.querySelectorAll('[data-hi]').forEach(function(el){
+    if(lang==='hi'){if(!el.hasAttribute('data-en'))el.setAttribute('data-en',el.innerHTML);el.innerHTML=el.getAttribute('data-hi');}
+    else if(el.hasAttribute('data-en')){el.innerHTML=el.getAttribute('data-en');el.removeAttribute('data-en');}
+  });
+}
+var $=function(id){return document.getElementById(id);};
+
+/* ---- simple-words explainers ---- */
+var LBL={
+ en:{simple:'In simple words',see:'What you will see',why:'Why it matters',tryit:'Try it',ask:'Ask the tutor to explain more'},
+ hi:{simple:'आसान शब्दों में',see:'आपको क्या दिखेगा',why:'यह क्यों ज़रूरी है',tryit:'आज़माकर देखें',ask:'ट्यूटर से और समझें'}
+};
+var EX=[
+{en:{t:'💡 Temperature, in simple words',simple:'Temperature tells us how warm or cold the sea water is, just like a thermometer does for your body. It is measured in degrees Celsius (°C).',see:'Surface water in the tropical Indian Ocean is warm, around 28°C. As you go deeper it gets colder, and at 1000 m it is only a few degrees. On the colour bar, orange means warm and dark blue means cold.',why:'Warm sea water gives energy to cyclones and monsoon rain. The layer where the water cools fastest is called the thermocline.',tryit:'Drag the depth slider from 0 m to 1000 m and watch the colours change from warm to cold.',q:'Explain ocean temperature in very simple words for a school student.'},
+ hi:{t:'💡 तापमान, आसान शब्दों में',simple:'तापमान बताता है कि समुद्र का पानी कितना गर्म या ठंडा है, ठीक वैसे जैसे थर्मामीटर आपके शरीर के लिए बताता है। इसे डिग्री सेल्सियस (°C) में नापते हैं।',see:'हिंद महासागर की ऊपरी सतह गर्म होती है, करीब 28°C। जैसे-जैसे नीचे जाते हैं पानी ठंडा होता जाता है, और 1000 मीटर पर सिर्फ़ कुछ डिग्री रह जाता है। रंग पट्टी में नारंगी का मतलब गर्म और गहरे नीले का मतलब ठंडा है।',why:'गर्म समुद्री पानी चक्रवात और मानसून की बारिश को ऊर्जा देता है। जिस परत में पानी सबसे तेज़ी से ठंडा होता है उसे थर्मोक्लाइन कहते हैं।',tryit:'गहराई स्लाइडर को 0 मीटर से 1000 मीटर तक खींचें और रंगों को गर्म से ठंडा होते देखें।',q:'समुद्र के तापमान को स्कूल के विद्यार्थी के लिए बहुत आसान शब्दों में समझाइए।'}},
+{en:{t:'💡 Salinity, in simple words',simple:'Salinity tells us how salty the sea water is. It is measured in PSU: 35 PSU means roughly 35 grams of salt in every 1 kg of sea water.',see:'The Bay of Bengal is fresher (about 30 to 34 PSU) because big rivers like the Ganga and Brahmaputra pour fresh water into it. The Arabian Sea is saltier (about 35 to 36 PSU). On the colour bar, light cyan means fresher and dark means saltier.',why:'Salty water is heavier and sinks, while fresh water floats on top. This layering changes ocean currents and how the monsoon behaves.',tryit:'Switch between Bay of Bengal and Arabian Sea and compare the colours at the surface.',q:'Explain ocean salinity in very simple words for a school student.'},
+ hi:{t:'💡 लवणता, आसान शब्दों में',simple:'लवणता बताती है कि समुद्र का पानी कितना खारा है। इसे PSU में नापते हैं: 35 PSU का मतलब है हर 1 किलो समुद्री पानी में लगभग 35 ग्राम नमक।',see:'बंगाल की खाड़ी कम खारी है (करीब 30 से 34 PSU) क्योंकि गंगा और ब्रह्मपुत्र जैसी बड़ी नदियाँ उसमें मीठा पानी डालती हैं। अरब सागर ज़्यादा खारा है (करीब 35 से 36 PSU)। रंग पट्टी में हल्का फ़िरोज़ी मतलब कम खारा और गहरा रंग मतलब ज़्यादा खारा।',why:'खारा पानी भारी होता है और नीचे बैठता है, जबकि मीठा पानी ऊपर तैरता है। यह परत समुद्री धाराओं और मानसून के व्यवहार को बदलती है।',tryit:'बंगाल की खाड़ी और अरब सागर के बीच बदलकर सतह के रंगों की तुलना करें।',q:'समुद्र की लवणता को स्कूल के विद्यार्थी के लिए बहुत आसान शब्दों में समझाइए।'}}
+];
+function activeVar(el){
+  if(el.getAttribute('data-src')==='cmp'){var s=$('cmp-variable');return s&&s.value==='PSAL'?1:0;}
+  var c=document.querySelector('#variable-chips .chip.active');return c&&c.getAttribute('data-var')==='1'?1:0;
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function renderEx(){
+  var L=LBL[lang];
+  document.querySelectorAll('.var-explainer').forEach(function(el){
+    var v=activeVar(el),e=EX[v][lang],open=el.querySelector('details')?el.querySelector('details').open:(el.getAttribute('data-src')==='cmp');
+    el.innerHTML='<details'+(open?' open':'')+'><summary>'+esc(e.t)+'</summary>'+
+     '<div class="ve-row"><b>'+L.simple+'</b>'+esc(e.simple)+'</div>'+
+     '<div class="ve-row"><b>'+L.see+'</b>'+esc(e.see)+'</div>'+
+     '<div class="ve-row"><b>'+L.why+'</b>'+esc(e.why)+'</div>'+
+     '<div class="ve-row"><b>'+L.tryit+'</b>'+esc(e.tryit)+'</div>'+
+     '<button type="button" class="ve-ask" data-q="'+esc(e.q).replace(/"/g,'&quot;')+'">'+L.ask+'</button></details>';
+  });
+}
+function mount(){
+  var vc=$('variable-chips');
+  if(vc&&!document.querySelector('.var-explainer[data-src="chips"]')){var a=document.createElement('div');a.className='var-explainer';a.setAttribute('data-src','chips');vc.parentNode.appendChild(a);}
+  var ch=document.querySelector('.compare-head');
+  if(ch&&!document.querySelector('.var-explainer[data-src="cmp"]')){var b=document.createElement('div');b.className='var-explainer';b.setAttribute('data-src','cmp');ch.parentNode.insertBefore(b,ch.nextSibling);}
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('.ve-ask');if(!b)return;
+  var f=$('tutor-fab'),i=$('tutor-input'),s=$('tutor-send');if(!f||!i||!s)return;
+  f.click();i.value=b.getAttribute('data-q');s.click();
+});
+function applyAll(){
+  lang=cur();blocks();walk(document.body);renderEx();
+}
+function boot(){
+  mount();applyAll();
+  var tl=$('lang-toggle');if(tl)tl.addEventListener('click',function(){setTimeout(applyAll,0);});
+  var vc=$('variable-chips');if(vc)new MutationObserver(function(){renderEx();}).observe(vc,{attributes:true,attributeFilter:['class'],subtree:true});
+  var cv=$('cmp-variable');if(cv)cv.addEventListener('change',renderEx);
+  new MutationObserver(function(ms){
+    ms.forEach(function(m){
+      if(m.type==='characterData')doNode(m.target);
+      else m.addedNodes.forEach(function(n){if(n.nodeType===3)doNode(n);else if(n.nodeType===1)walk(n);});
+    });
+  }).observe(document.body,{childList:true,subtree:true,characterData:true});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+
 </body>
 </html>

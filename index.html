@@ -181,7 +181,7 @@ function apply(){
  document.getElementById('lang-toggle').textContent=T[lang].lang_btn;
 }
 document.getElementById('lang-toggle').addEventListener('click',function(){lang=lang==='en'?'hi':'en';LS.set('SagarDrishti_lang',lang);apply();});
-function go(){window.location.href='explorer.html';}
+function go(){LS.set('SagarDrishti_role','education');window.location.href='explorer.html';}
 document.getElementById('btn-launch').addEventListener('click',go);
 document.getElementById('btn-start-nav').addEventListener('click',go);
 document.getElementById('btn-learn').addEventListener('click',function(){document.getElementById('feature-grid').scrollIntoView({behavior:'smooth'});});
