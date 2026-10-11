@@ -248,7 +248,7 @@ def tutor():
                 contents=contents,
                 config=types.GenerateContentConfig(
                     system_instruction=system,
-                    max_output_tokens=450,
+                    max_output_tokens=600,
                     temperature=0.4,
                     thinking_config=_thinking_config(),
                 ),
