@@ -1,0 +1,13 @@
+flask
+flask-cors
+gunicorn
+python-dotenv
+pandas
+requests
+xarray
+scipy
+netCDF4
+numpy
+urllib3
+copernicusmarine
+google-genai
