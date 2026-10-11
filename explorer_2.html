@@ -2458,7 +2458,7 @@ function setQuizNote(m){var n=$('quiz-ai-note');if(n)n.textContent=m||'';}
 function loadAiQuiz(){
  var btn=$('quiz-ai');if(btn)btn.disabled=true;setQuizNote(t('ai_loading'));
  var ctrl=('AbortController' in window)?new AbortController():null;
- var timer=setTimeout(function(){if(ctrl)ctrl.abort();},30000);
+ var timer=setTimeout(function(){if(ctrl)ctrl.abort();},40000);
  fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lang:lang,n:5,context:ctx()}),signal:ctrl?ctrl.signal:undefined})
  .then(function(r){if(!r.ok)return r.json().catch(function(){return {};}).then(function(j){throw new Error('http '+r.status+(j&&j.error?': '+j.error:''));});return r.json();})
  .then(function(j){
@@ -2525,7 +2525,7 @@ wait.innerHTML =
  var ctrl=('AbortController' in window)?new AbortController():null;
  var timer = setTimeout(function(){
     if (ctrl) ctrl.abort();
-}, 15000);
+}, 25000);
  fetch('/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,context:ctx(),lang:lang,history:chat.slice(-6)}),signal:ctrl?ctrl.signal:undefined})
  .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();})
  .then(function(j){if(!j||!j.answer)throw new Error('empty');live=true;wait.textContent=j.answer;chat.push({role:'user',content:q},{role:'assistant',content:j.answer});speak(j.answer);})
